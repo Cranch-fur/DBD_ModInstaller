@@ -34,4 +34,5 @@ It's possible to put any amount of mods in to 1 json file, program will parse al
 ]
 ```
 
-Keep in Mind that this repository & program was just a concept + it doesn't work with .pak files, which size is over 4GB (buffer being overloaded), feel free to make the program better! If you're not part of MBD community & have better version of my code, please, come to https://discord.gg/n2SBfWXJhN & PM Кранч 「🐺」#6585 (me) / Schinsly
+Keep in mind that repository was made as an concept + on current state it doesn't work with .pak files, which size is over 4GB (buffer being overloaded). 
+Feel free to improve my program or create something great according to my project! If you're not part of MBD community yet & have something cool to contribute, please, come to https://discord.gg/n2SBfWXJhN & PM Кранч 「🐺」#6585 (me) / Schinsly
