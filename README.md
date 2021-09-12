@@ -12,7 +12,7 @@ This repository was made for educational purposes only, do not use implemented h
     "changed": ""
   },
   {
-    "modtitle": "MOD_2",
+    "modtitle": "",
     "sourcefile": "",
     "original": "",
     "changed": ""
