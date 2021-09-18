@@ -1,0 +1,4 @@
+BinaryPatcher by ViRb3 https://github.com/ViRb3/BinaryPatcher
+
+Used DBD_ModInstaller by Cranch-fur https://github.com/Cranch-fur/DBD_ModInstaller as a base.
+Licensed under the Apache License 2.0 (see ApacheLicense2.txt)
