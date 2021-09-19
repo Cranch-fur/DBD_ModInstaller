@@ -36,6 +36,9 @@
     <ApplicationIcon>DBM-Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\CircularProgressBar.2.8.0.16\lib\net40\CircularProgressBar.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WinFormAnimation, Version=1.6.0.4, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinFormAnimation.1.6.0.4\lib\net40\WinFormAnimation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\PickResult.cs" />
@@ -57,6 +63,7 @@
     <Compile Include="Model\ModPackage.cs" />
     <Compile Include="Model\Settings.cs" />
     <Compile Include="Model\SettingsRepository.cs" />
+    <Compile Include="Presenter\SpinnerProgressPresenter.cs" />
     <Compile Include="Presenter\CreatorPresenter.cs" />
     <Compile Include="Presenter\InstallerPresenter.cs" />
     <Compile Include="Services\Interfaces\IPatcherService.cs" />
@@ -65,6 +72,7 @@
     <Compile Include="Services\Interfaces\IPickerService.cs" />
     <Compile Include="Services\Interfaces\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="View\ISpinnerProgressView.cs" />
     <Compile Include="View\ICreatorView.cs" />
     <Compile Include="View\IInstallerView.cs" />
     <Compile Include="View\CreatorForm.cs">
@@ -72,6 +80,12 @@
     </Compile>
     <Compile Include="View\CreatorForm.Designer.cs">
       <DependentUpon>CreatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\SpinnerProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SpinnerProgressForm.Designer.cs">
+      <DependentUpon>SpinnerProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\InstallerForm.cs">
       <SubType>Form</SubType>
@@ -83,6 +97,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="View\CreatorForm.resx">
       <DependentUpon>CreatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SpinnerProgressForm.resx">
+      <DependentUpon>SpinnerProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\InstallerForm.resx">
       <DependentUpon>InstallerForm.cs</DependentUpon>

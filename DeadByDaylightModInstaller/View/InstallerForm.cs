@@ -14,8 +14,8 @@ namespace Dead_By_Daylight_Mod_Installer
 {
     public partial class InstallerForm : Form, IInstallerView
     {
-        private const int cGrip = 16;      // Grip size
-        private const int cCaption = 32;   // Caption bar height;
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HT_CAPTION = 0x2;
 
         public InstallerForm()
         {
@@ -60,37 +60,27 @@ namespace Dead_By_Daylight_Mod_Installer
             WindowState = FormWindowState.Minimized;
         }
 
-        //seems like a hack to make the form movable
-        //public const int WM_NCLBUTTONDOWN = 0xA1;
-        //public const int HT_CAPTION = 0x2;
+        //hack to make the form movable
         private void ToolbarPanel_MouseDown(object sender, MouseEventArgs e)
         {
             toolbarPanel.Capture = false;
-            Message mouse = Message.Create(Handle, 0xa1, new IntPtr(2), IntPtr.Zero);
+            Message mouse = Message.Create(Handle, WM_NCLBUTTONDOWN, new IntPtr(HT_CAPTION), IntPtr.Zero);
             WndProc(ref mouse);
         }
 
-        private void InstallButton_Click(object sender, EventArgs e)
+        private async void InstallButton_Click(object sender, EventArgs e)
         {
-            Presenter.InstallMod();
+            await Presenter.InstallMod();
         }
 
-        private void UninstallButton_Click(object sender, EventArgs e)
+        private async void UninstallButton_Click(object sender, EventArgs e)
         {
-            Presenter.UninstallMod();
+            await Presenter.UninstallMod();
         }
 
         private void ChangePaksPathButton_Click(object sender, EventArgs e)
         {
-            //TODO: move to the service
-            using (FolderBrowserDialog paksPathBrowser = new FolderBrowserDialog())
-            {
-                DialogResult dialogResult = paksPathBrowser.ShowDialog();
-                if (dialogResult == DialogResult.OK)
-                {
-                    Presenter.ChangePaksPath(paksPathBrowser.SelectedPath);
-                }
-            }
+            Presenter.ChangePaksPath();
         }
 
         private void CreatePackageButton_Click(object sender, EventArgs e)

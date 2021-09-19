@@ -43,7 +43,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             creatorView.ShowDialog();
         }
 
-        public void InstallMod()
+        public async Task InstallMod()
         {
             if (!Directory.Exists(settingsRepository.Settings.PaksPath))
             {
@@ -63,8 +63,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                         {
                             messageBoxService.ShowMessage($"Mod Installer Can't find \"{mod.PakName}\" file, make sure that specified pak folder path still valid.");
                         }
-                        //TODO: stop blocking the thread
-                        else if (Task.Run(async () => await patcherService.FindAndReplaceBytes(pakFilePath, mod.OriginalBytes, mod.ModifiedBytes)).Result)
+                        else if (await ReplaceBytes($"Installing {mod.Title}", pakFilePath, mod.OriginalBytes, mod.ModifiedBytes))
                         {
                             messageBoxService.ShowMessage($"\"{mod.Title}\" Mod has been successfully installed!");
                         }
@@ -81,7 +80,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             }
         }
 
-        public void UninstallMod()
+        public async Task UninstallMod()
         {
             if (!Directory.Exists(settingsRepository.Settings.PaksPath))
             {
@@ -101,8 +100,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                         {
                             messageBoxService.ShowMessage($"Mod Installer Can't find \"{mod.PakName}\" file, make sure that specified pak folder path still valid.");
                         }
-                        //TODO: stop blocking the thread
-                        else if (Task.Run(async () => await patcherService.FindAndReplaceBytes(pakFilePath, mod.ModifiedBytes, mod.OriginalBytes)).Result)
+                        else if (await ReplaceBytes($"Uninstalling {mod.Title}", pakFilePath, mod.ModifiedBytes, mod.OriginalBytes))
                         {
                             messageBoxService.ShowMessage($"\"{mod.Title}\" Mod successfully uninstalled!");
                         }
@@ -119,17 +117,32 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             }
         }
 
-        public void ChangePaksPath(string newPath)
+        public void ChangePaksPath()
         {
-            if(string.IsNullOrWhiteSpace(newPath))
+            var pickResult = pickerService.PickFolder(out string newPath);
+            if (pickResult == Enums.PickResult.Ok)
             {
-                return;
+                settingsRepository.Settings.PaksPath = newPath;
+                settingsRepository.SaveSettings();
+
+                view.PaksPath = newPath;
             }
+            else
+            {
+                messageBoxService.ShowMessage("Error occured during picking the folder.");
+            }
+        }
 
-            settingsRepository.Settings.PaksPath = newPath;
-            settingsRepository.SaveSettings();
+        private async Task<bool> ReplaceBytes(string message, string filePath, byte[] originalBytes, byte[] changedBytes)
+        {
+            bool result = false;
+            var spinnerView = new SpinnerProgressForm();
+            var spinnerPresenter = new SpinnerProgressPresenter(spinnerView);
+            spinnerPresenter.SetMessage(message);
+            spinnerPresenter.SetWork(Task.Run(async () => result = await patcherService.FindAndReplaceBytes(filePath, originalBytes, changedBytes)));
+            spinnerView.ShowDialog();
 
-            view.PaksPath = newPath;
+            return result;
         }
     }
 }

@@ -11,14 +11,29 @@ namespace Dead_By_Daylight_Mod_Installer.Services
 {
     public class PickerService : IPickerService
     {
-        public PickResult PickJsonFilePath2(out string filePath)
+        public PickResult PickFolder(out string folderPath)
         {
-            return PickFilePath(out filePath, "Json Mod Package|*.json");
-        }
+            folderPath = string.Empty;
+            try
+            {
+                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                {
+                    DialogResult dialogResult = folderBrowserDialog.ShowDialog();
+                    if (dialogResult == DialogResult.OK)
+                    {
+                        folderPath = folderBrowserDialog.SelectedPath;
+                        return PickResult.Ok;
+                    }
+                    else
+                    {
+                        return PickResult.Cancel;
+                    }
+                }
+            }
+            catch(Exception)
+            { }
 
-        public PickResult PickPakFilePath2(out string filePath)
-        {
-            return PickFilePath(out filePath, "Pak file|*.pak");
+            return PickResult.None;
         }
 
         public PickResult PickFilePath(out string filePath, string filter)
