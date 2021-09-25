@@ -1,4 +1,5 @@
-﻿using Dead_By_Daylight_Mod_Installer.Model;
+﻿using Dead_By_Daylight_Mod_Installer.Consts;
+using Dead_By_Daylight_Mod_Installer.Model;
 using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
 using Dead_By_Daylight_Mod_Installer.View;
 using Newtonsoft.Json;
@@ -16,18 +17,20 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
         private readonly ICreatorView view;
         private readonly IMessageBoxService messageBoxService;
         private readonly IPickerService pickerService;
+        private readonly IPackageService packageService;
 
-        public CreatorPresenter(ICreatorView view, IMessageBoxService messageBoxService, IPickerService pickerService)
+        public CreatorPresenter(ICreatorView view, IPackageService packageService, IMessageBoxService messageBoxService, IPickerService pickerService)
         {
             this.view = view;
             this.view.Presenter = this;
             this.messageBoxService = messageBoxService;
             this.pickerService = pickerService;
+            this.packageService = packageService;
         }
 
         public void PickPakFile()
         {
-            if(pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak") == Enums.PickResult.Ok)
+            if(pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak", Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
             {
                 view.PakFileName = Path.GetFileName(pakFilePath);
             }
@@ -58,7 +61,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                 return;
             }
 
-            var pickResult = pickerService.PickSaveFilePath(out string filePath);
+            var pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModPackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
                 var modPackage = new ModPackage
@@ -77,7 +80,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
                 try
                 {
-                    File.WriteAllText(filePath, JsonConvert.SerializeObject(modPackage));
+                    packageService.SavePackage(filePath, modPackage, packageService.GetFormat(filePath));
                 }
                 catch(Exception ex)
                 {

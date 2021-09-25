@@ -9,8 +9,8 @@ namespace Dead_By_Daylight_Mod_Installer.Services.Interfaces
 {
     public interface IPickerService
     {
-        PickResult PickFilePath(out string filePath, string filter);
+        PickResult PickFilePath(out string filePath, string filter, string initialDirectory = null);
         PickResult PickFolder(out string folderPath);
-        PickResult PickSaveFilePath(out string fileName);
+        PickResult PickSaveFilePath(out string fileName, string filter);
     }
 }
