@@ -52,19 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consts\Constants.cs" />
+    <Compile Include="Enums\ModPackageFormat.cs" />
     <Compile Include="Enums\PickResult.cs" />
-    <Compile Include="Model\ISettingsRepository.cs" />
     <Compile Include="Model\ModPackage.cs" />
-    <Compile Include="Model\Settings.cs" />
-    <Compile Include="Model\SettingsRepository.cs" />
     <Compile Include="Presenter\CreatorPresenter.cs" />
     <Compile Include="Presenter\InstallerPresenter.cs" />
     <Compile Include="Services\Interfaces\IPatcherService.cs" />
+    <Compile Include="Services\Interfaces\IPackageService.cs" />
     <Compile Include="Services\PatcherService.cs" />
+    <Compile Include="Services\PackageService.cs" />
     <Compile Include="Services\PickerService.cs" />
     <Compile Include="Services\Interfaces\IPickerService.cs" />
     <Compile Include="Services\Interfaces\IMessageBoxService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="Utils\GZipCompressor.cs" />
+    <Compile Include="Utils\CranchCompressor.cs" />
     <Compile Include="View\ICreatorView.cs" />
     <Compile Include="View\IInstallerView.cs" />
     <Compile Include="View\CreatorForm.cs">
@@ -122,5 +125,6 @@
       <Name>BinaryPatcher</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,7 +21,7 @@ namespace Dead_By_Daylight_Mod_Installer.Services
             return PickFilePath(out filePath, "Pak file|*.pak");
         }
 
-        public PickResult PickFilePath(out string filePath, string filter)
+        public PickResult PickFilePath(out string filePath, string filter, string initialDirectory = null)
         {
             filePath = string.Empty;
 
@@ -30,7 +30,7 @@ namespace Dead_By_Daylight_Mod_Installer.Services
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.RestoreDirectory = true;
-                    openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+                    openFileDialog.InitialDirectory = string.IsNullOrWhiteSpace(initialDirectory) ? Environment.CurrentDirectory : initialDirectory;
                     openFileDialog.Filter = filter;
                     openFileDialog.FilterIndex = 1;
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -49,7 +49,7 @@ namespace Dead_By_Daylight_Mod_Installer.Services
             return PickResult.None;
         }
 
-        public PickResult PickSaveFilePath(out string filePath)
+        public PickResult PickSaveFilePath(out string filePath, string filter)
         {
             filePath = string.Empty;
 
@@ -59,7 +59,7 @@ namespace Dead_By_Daylight_Mod_Installer.Services
                 {
                     saveFileDialog.RestoreDirectory = true;
                     saveFileDialog.InitialDirectory = Environment.CurrentDirectory;
-                    saveFileDialog.Filter = "Json Mod Package|*.json";
+                    saveFileDialog.Filter = filter;
                     saveFileDialog.FilterIndex = 1;
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
