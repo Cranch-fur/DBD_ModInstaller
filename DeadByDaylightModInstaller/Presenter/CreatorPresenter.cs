@@ -17,6 +17,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
         private readonly ICreatorView view;
         private readonly IMessageBoxService messageBoxService;
         private readonly IPickerService pickerService;
+        private List<ModListItem> package;
         private readonly IPackageService packageService;
 
         public CreatorPresenter(ICreatorView view, IPackageService packageService, IMessageBoxService messageBoxService, IPickerService pickerService)
@@ -26,68 +27,116 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             this.messageBoxService = messageBoxService;
             this.pickerService = pickerService;
             this.packageService = packageService;
+
+            package = new List<ModListItem>();
+            AddMod();
         }
 
-        public void PickPakFile()
+        public void RemoveMod(ModListItem modListItem)
         {
-            if(pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak", Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
+            package.Remove(modListItem);
+            view.ModListItems = package;
+        }
+
+        public void AddMod()
+        {
+            var modListItem = new ModListItem();
+            modListItem.Rows = new List<ModListItem.Row>
             {
-                view.PakFileName = Path.GetFileName(pakFilePath);
+                new ModListItem.Row
+                {
+                    DisplayName = nameof(ModPackage.Mod.Title),
+                    Name = ModListItem.Row.TitleRowName,
+                    Data = "Package",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = nameof(ModPackage.Mod.PakName),
+                    Name = ModListItem.Row.PakFileNameRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = "Original ubulk path",
+                    Name = ModListItem.Row.OriginalUbulkPathRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = "Modified ubulk path",
+                    Name = ModListItem.Row.ModifiedUbulkPathRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+            };
+            package.Add(modListItem);
+            view.ModListItems = package;
+        }
+
+        public void PickPakFile(ref ModListItem.Row row)
+        {
+            if (pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak", Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
+            {
+                row.Data = Path.GetFileName(pakFilePath);
             }
         }
 
-        public void PickOriginalFile()
+        public void PickUbulkFile(ref ModListItem.Row row)
         {
             if (pickerService.PickFilePath(out string originalFilePath, "ubulk (*.ubulk)|*.ubulk|All files (*.*)|*.*") == Enums.PickResult.Ok)
             {
-                view.OriginalFilePath = originalFilePath;
-            }
-        }
-
-        public void PickModifiedFile()
-        {
-            if (pickerService.PickFilePath(out string modifiedFilePath, "ubulk (*.ubulk)|*.ubulk|All files (*.*)|*.*") == Enums.PickResult.Ok)
-            {
-                view.ModifiedFilePath = modifiedFilePath;
+                row.Data = originalFilePath;
             }
         }
 
         public void CreateModPackage()
         {
-            if(string.IsNullOrWhiteSpace(view.ModTitle) || string.IsNullOrWhiteSpace(view.PakFileName)
-                || string.IsNullOrWhiteSpace(view.ModTitle) || string.IsNullOrWhiteSpace(view.PakFileName))
+            foreach (var modListItem in package)
             {
-                messageBoxService.ShowMessage("One of the fields is empty");
-                return;
+                foreach (var row in modListItem.Rows)
+                {
+                    if (string.IsNullOrWhiteSpace(row.Data))
+                    {
+                        var modNameRow = modListItem.Rows.First(modListItemRow => modListItemRow.Name == ModListItem.Row.TitleRowName);
+                        if (string.IsNullOrWhiteSpace(modNameRow.Data))
+                        {
+                            messageBoxService.ShowMessage("Mod title missing");
+                        }
+                        else
+                        {
+                            messageBoxService.ShowMessage($"Mod {modNameRow.Data} missing {row.DisplayName}");
+                        }
+                        return;
+                    }
+                }
             }
 
-            var pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModPackageFilter);
+            var pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModSavePackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
-                var modPackage = new ModPackage
-                {
-                    Mods = new List<ModPackage.Mod>
-                    {
-                        new ModPackage.Mod
-                        {
-                            Title = view.ModTitle,
-                            PakName = view.PakFileName,
-                            OriginalBytes = File.ReadAllBytes(view.OriginalFilePath),
-                            ModifiedBytes = File.ReadAllBytes(view.ModifiedFilePath),
-                        }
-                    }
-                };
-
                 try
                 {
-                    packageService.SavePackage(filePath, modPackage, packageService.GetFormat(filePath));
+                    ModPackage modPackage = new ModPackage
+                    {
+                        Mods = package.Select(modListItem => new ModPackage.Mod
+                        {
+                            Title = modListItem.Rows.First(row => row.Name == ModListItem.Row.TitleRowName).Data,
+                            PakName = modListItem.Rows.First(row => row.Name == ModListItem.Row.PakFileNameRowName).Data,
+                            OriginalBytes = File.ReadAllBytes(modListItem.Rows.First(row => row.Name == ModListItem.Row.OriginalUbulkPathRowName).Data),
+                            ModifiedBytes = File.ReadAllBytes(modListItem.Rows.First(row => row.Name == ModListItem.Row.ModifiedUbulkPathRowName).Data),
+                        }).ToList()
+                    };
+                    File.WriteAllText(filePath, JsonConvert.SerializeObject(modPackage));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     messageBoxService.ShowMessage(ex.Message);
                 }
             }
-            else if(pickResult == Enums.PickResult.None)
+            else if (pickResult == Enums.PickResult.None)
             {
                 messageBoxService.ShowMessage("Failed to get save file path");
             }

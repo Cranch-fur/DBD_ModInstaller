@@ -29,20 +29,20 @@ namespace Dead_By_Daylight_Mod_Installer
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreatorForm));
             this.toolbarPanel = new System.Windows.Forms.Panel();
             this.minimizeToolbarButton = new System.Windows.Forms.Button();
             this.closeToolbarButton = new System.Windows.Forms.Button();
-            this.TitleTextBox = new System.Windows.Forms.TextBox();
-            this.pakNameTextBox = new System.Windows.Forms.TextBox();
-            this.OriginalTexturePathTextBox = new System.Windows.Forms.TextBox();
-            this.ModifiedTexturePathTextBox = new System.Windows.Forms.TextBox();
-            this.modTitleLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.createJsonButton = new System.Windows.Forms.Button();
+            this.generatePackageButton = new System.Windows.Forms.Button();
+            this.modsTreeListView = new BrightIdeasSoftware.TreeListView();
+            this.displayColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.dataColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.actionColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.addModButton = new System.Windows.Forms.Button();
+            this.removeModButton = new System.Windows.Forms.Button();
             this.toolbarPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.modsTreeListView)).BeginInit();
             this.SuspendLayout();
             // 
             // toolbarPanel
@@ -86,105 +86,81 @@ namespace Dead_By_Daylight_Mod_Installer
             this.closeToolbarButton.UseVisualStyleBackColor = false;
             this.closeToolbarButton.Click += new System.EventHandler(this.CloseToolbarButton_Click);
             // 
-            // TitleTextBox
+            // generatePackageButton
             // 
-            this.TitleTextBox.BackColor = System.Drawing.Color.White;
-            this.TitleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TitleTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TitleTextBox.Location = new System.Drawing.Point(147, 268);
-            this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(404, 21);
-            this.TitleTextBox.TabIndex = 16;
+            this.generatePackageButton.Location = new System.Drawing.Point(238, 407);
+            this.generatePackageButton.Name = "generatePackageButton";
+            this.generatePackageButton.Size = new System.Drawing.Size(122, 23);
+            this.generatePackageButton.TabIndex = 24;
+            this.generatePackageButton.Text = "Generate package";
+            this.generatePackageButton.UseVisualStyleBackColor = true;
+            this.generatePackageButton.Click += new System.EventHandler(this.GeneratePackageButton_Click);
             // 
-            // pakNameTextBox
+            // modsTreeListView
             // 
-            this.pakNameTextBox.BackColor = System.Drawing.Color.White;
-            this.pakNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pakNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.pakNameTextBox.Location = new System.Drawing.Point(147, 295);
-            this.pakNameTextBox.Name = "pakNameTextBox";
-            this.pakNameTextBox.ReadOnly = true;
-            this.pakNameTextBox.Size = new System.Drawing.Size(404, 21);
-            this.pakNameTextBox.TabIndex = 17;
-            this.pakNameTextBox.Click += new System.EventHandler(this.PakNameTextBox_Click);
+            this.modsTreeListView.AllColumns.Add(this.displayColumn);
+            this.modsTreeListView.AllColumns.Add(this.dataColumn);
+            this.modsTreeListView.AllColumns.Add(this.actionColumn);
+            this.modsTreeListView.CellEditUseWholeCell = false;
+            this.modsTreeListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.displayColumn,
+            this.dataColumn,
+            this.actionColumn});
+            this.modsTreeListView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.modsTreeListView.EmptyListMsg = "Drop something here";
+            this.modsTreeListView.HideSelection = false;
+            this.modsTreeListView.IsSimpleDragSource = true;
+            this.modsTreeListView.IsSimpleDropSink = true;
+            this.modsTreeListView.Location = new System.Drawing.Point(12, 206);
+            this.modsTreeListView.MultiSelect = false;
+            this.modsTreeListView.Name = "modsTreeListView";
+            this.modsTreeListView.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.Submenu;
+            this.modsTreeListView.ShowGroups = false;
+            this.modsTreeListView.ShowItemToolTips = true;
+            this.modsTreeListView.Size = new System.Drawing.Size(561, 195);
+            this.modsTreeListView.TabIndex = 0;
+            this.modsTreeListView.UseCompatibleStateImageBehavior = false;
+            this.modsTreeListView.View = System.Windows.Forms.View.Details;
+            this.modsTreeListView.VirtualMode = true;
+            this.modsTreeListView.ButtonClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.ModsTreeListView_ButtonClick);
+            this.modsTreeListView.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.ModsTreeListView_CellEditStarting);
+            this.modsTreeListView.SelectionChanged += new System.EventHandler(this.ModsTreeListView_SelectionChanged);
             // 
-            // OriginalTexturePathTextBox
+            // displayColumn
             // 
-            this.OriginalTexturePathTextBox.BackColor = System.Drawing.Color.White;
-            this.OriginalTexturePathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OriginalTexturePathTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.OriginalTexturePathTextBox.Location = new System.Drawing.Point(147, 322);
-            this.OriginalTexturePathTextBox.Name = "OriginalTexturePathTextBox";
-            this.OriginalTexturePathTextBox.ReadOnly = true;
-            this.OriginalTexturePathTextBox.Size = new System.Drawing.Size(404, 21);
-            this.OriginalTexturePathTextBox.TabIndex = 18;
-            this.OriginalTexturePathTextBox.Click += new System.EventHandler(this.OriginalTexturePathTextBox_Click);
+            this.displayColumn.Text = "Name";
+            this.displayColumn.Width = 125;
             // 
-            // ModifiedTexturePathTextBox
+            // dataColumn
             // 
-            this.ModifiedTexturePathTextBox.BackColor = System.Drawing.Color.White;
-            this.ModifiedTexturePathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ModifiedTexturePathTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ModifiedTexturePathTextBox.Location = new System.Drawing.Point(147, 349);
-            this.ModifiedTexturePathTextBox.Name = "ModifiedTexturePathTextBox";
-            this.ModifiedTexturePathTextBox.ReadOnly = true;
-            this.ModifiedTexturePathTextBox.Size = new System.Drawing.Size(404, 21);
-            this.ModifiedTexturePathTextBox.TabIndex = 19;
-            this.ModifiedTexturePathTextBox.Click += new System.EventHandler(this.ModifiedTexturePathTextBox_Click);
+            this.dataColumn.Text = "Data";
+            this.dataColumn.Width = 376;
             // 
-            // modTitleLabel
+            // actionColumn
             // 
-            this.modTitleLabel.AutoSize = true;
-            this.modTitleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.modTitleLabel.ForeColor = System.Drawing.Color.White;
-            this.modTitleLabel.Location = new System.Drawing.Point(53, 272);
-            this.modTitleLabel.Name = "modTitleLabel";
-            this.modTitleLabel.Size = new System.Drawing.Size(47, 13);
-            this.modTitleLabel.TabIndex = 20;
-            this.modTitleLabel.Text = "Mod title";
+            this.actionColumn.ButtonSizing = BrightIdeasSoftware.OLVColumn.ButtonSizingMode.CellBounds;
+            this.actionColumn.IsButton = true;
+            this.actionColumn.Text = "";
             // 
-            // label1
+            // addModButton
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(53, 299);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 13);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Pak file name";
+            this.addModButton.Location = new System.Drawing.Point(579, 206);
+            this.addModButton.Name = "addModButton";
+            this.addModButton.Size = new System.Drawing.Size(68, 23);
+            this.addModButton.TabIndex = 25;
+            this.addModButton.Text = "Add";
+            this.addModButton.UseVisualStyleBackColor = true;
+            this.addModButton.Click += new System.EventHandler(this.AddModButton_Click);
             // 
-            // label2
+            // removeModButton
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(53, 326);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 13);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Original file";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(53, 353);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 13);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "Modified file";
-            // 
-            // createJsonButton
-            // 
-            this.createJsonButton.Location = new System.Drawing.Point(285, 407);
-            this.createJsonButton.Name = "createJsonButton";
-            this.createJsonButton.Size = new System.Drawing.Size(75, 23);
-            this.createJsonButton.TabIndex = 24;
-            this.createJsonButton.Text = "Create json";
-            this.createJsonButton.UseVisualStyleBackColor = true;
-            this.createJsonButton.Click += new System.EventHandler(this.CreateJsonButton_Click);
+            this.removeModButton.Location = new System.Drawing.Point(579, 235);
+            this.removeModButton.Name = "removeModButton";
+            this.removeModButton.Size = new System.Drawing.Size(68, 23);
+            this.removeModButton.TabIndex = 26;
+            this.removeModButton.Text = "Remove";
+            this.removeModButton.UseVisualStyleBackColor = true;
+            this.removeModButton.Click += new System.EventHandler(this.RemoveModButton_Click);
             // 
             // CreatorForm
             // 
@@ -194,15 +170,10 @@ namespace Dead_By_Daylight_Mod_Installer
             this.BackgroundImage = global::Dead_By_Daylight_Mod_Installer.Properties.Resources.background_creator;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(659, 434);
-            this.Controls.Add(this.createJsonButton);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.modTitleLabel);
-            this.Controls.Add(this.ModifiedTexturePathTextBox);
-            this.Controls.Add(this.OriginalTexturePathTextBox);
-            this.Controls.Add(this.pakNameTextBox);
-            this.Controls.Add(this.TitleTextBox);
+            this.Controls.Add(this.removeModButton);
+            this.Controls.Add(this.addModButton);
+            this.Controls.Add(this.modsTreeListView);
+            this.Controls.Add(this.generatePackageButton);
             this.Controls.Add(this.toolbarPanel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -210,8 +181,8 @@ namespace Dead_By_Daylight_Mod_Installer
             this.Name = "CreatorForm";
             this.Text = "Dead By Daylight Mod Installer";
             this.toolbarPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.modsTreeListView)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -220,15 +191,13 @@ namespace Dead_By_Daylight_Mod_Installer
         private System.Windows.Forms.Panel toolbarPanel;
         private System.Windows.Forms.Button minimizeToolbarButton;
         private System.Windows.Forms.Button closeToolbarButton;
-        private System.Windows.Forms.TextBox TitleTextBox;
-        private System.Windows.Forms.TextBox pakNameTextBox;
-        private System.Windows.Forms.TextBox OriginalTexturePathTextBox;
-        private System.Windows.Forms.TextBox ModifiedTexturePathTextBox;
-        private System.Windows.Forms.Label modTitleLabel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button createJsonButton;
+        private System.Windows.Forms.Button generatePackageButton;
+        private BrightIdeasSoftware.TreeListView modsTreeListView;
+        private BrightIdeasSoftware.OLVColumn displayColumn;
+        private BrightIdeasSoftware.OLVColumn actionColumn;
+        private BrightIdeasSoftware.OLVColumn dataColumn;
+        private System.Windows.Forms.Button addModButton;
+        private System.Windows.Forms.Button removeModButton;
     }
 }
 

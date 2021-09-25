@@ -42,6 +42,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +64,7 @@
     <Compile Include="Consts\Constants.cs" />
     <Compile Include="Enums\ModPackageFormat.cs" />
     <Compile Include="Enums\PickResult.cs" />
+    <Compile Include="Model\ModListItem.cs" />
     <Compile Include="Model\ModPackage.cs" />
 	  <Compile Include="Presenter\SpinnerProgressPresenter.cs" />
     <Compile Include="Presenter\CreatorPresenter.cs" />
