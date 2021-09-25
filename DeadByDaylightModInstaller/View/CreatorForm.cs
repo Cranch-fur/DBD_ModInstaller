@@ -1,4 +1,5 @@
-﻿using Dead_By_Daylight_Mod_Installer.Model;
+﻿using BrightIdeasSoftware;
+using Dead_By_Daylight_Mod_Installer.Model;
 using Dead_By_Daylight_Mod_Installer.Presenter;
 using Dead_By_Daylight_Mod_Installer.View;
 using Microsoft.Win32;
@@ -22,55 +23,70 @@ namespace Dead_By_Daylight_Mod_Installer
             set => this.modsTreeListView.Roots = value;
         }
 
-
         public CreatorForm()
         {
             InitializeComponent();
 
-            this.modsTreeListView.ButtonClick += ModsTreeListView_ButtonClick;
-
-            this.actionColumn.AspectGetter = model => model is ModListItem.Row ? "Change" : null;
-
-            this.displayColumn.AspectGetter = model =>
-            {
-                if(model is ModListItem modModel)
-                {
-                    return modModel.Rows.FirstOrDefault()?.Data ?? string.Empty;
-                }
-                else if (model is ModListItem.Row rowModel)
-                {
-                    return rowModel.DisplayName;
-                }
-                return string.Empty;
-            };
-            this.dataColumn.AspectGetter = model =>
-            {
-                if (model is ModListItem.Row rowModel)
-                {
-                    return rowModel.Data;
-                }
-                return string.Empty;
-            };
-            this.dataColumn.AspectPutter = (model, newValue) =>
-            {
-                if (model is ModListItem.Row rowModel && rowModel.Name == ModListItem.Row.TitleRowName)
-                {
-                    rowModel.Data = newValue;
-                }
-            };
-            this.modsTreeListView.CanExpandGetter =  model => model is ModListItem;
-            this.modsTreeListView.ChildrenGetter = model =>
-            {
-                if(model is ModListItem modModel)
-                {
-                    return modModel.Rows;
-                }
-                return null;
-            };
-            this.modsTreeListView.ShowItemToolTips = true;
+            this.actionColumn.AspectGetter = ActionColumnAspectGetter;
+            this.displayColumn.AspectGetter = DisplayColumnAspectGetter;
+            this.dataColumn.AspectGetter = DataColumnAspectGetter;
+            this.dataColumn.AspectPutter = DataColumnAspectPutter;
+            this.modsTreeListView.CanExpandGetter = ModsTreeListViewCanExpandGetter;
+            this.modsTreeListView.ChildrenGetter = ModsTreeListViewChildrenGetter;
         }
 
         public CreatorPresenter Presenter { private get; set; }
+
+
+        private object DisplayColumnAspectGetter(object model)
+        {
+            if (model is ModListItem modModel)
+            {
+                return modModel.Rows.FirstOrDefault()?.Data ?? string.Empty;
+            }
+            else if (model is ModListItem.Row rowModel)
+            {
+                return rowModel.DisplayName;
+            }
+            return string.Empty;
+        }
+
+        private object DataColumnAspectGetter(object model)
+        {
+            if (model is ModListItem.Row rowModel)
+            {
+                return rowModel.Data;
+            }
+            return string.Empty;
+        }
+
+        private void DataColumnAspectPutter(object model, object newValue)
+        {
+            if (model is ModListItem.Row rowModel && rowModel.Name == ModListItem.Row.TitleRowName)
+            {
+                rowModel.Data = newValue.ToString();
+            }
+        }
+
+        private bool ModsTreeListViewCanExpandGetter(object model)
+        {
+            return model is ModListItem;
+        }
+
+        private IEnumerable ModsTreeListViewChildrenGetter(object model)
+        {
+            if (model is ModListItem modModel)
+            {
+                return modModel.Rows;
+            }
+
+            return null;
+        }
+
+        private object ActionColumnAspectGetter(object model)
+        {
+            return model is ModListItem.Row ? "Change" : null;
+        }
 
         private void CloseToolbarButton_Click(object sender, EventArgs e)
         {
@@ -102,6 +118,21 @@ namespace Dead_By_Daylight_Mod_Installer
             Presenter.AddMod();
         }
 
+        private void RemoveModButton_Click(object sender, EventArgs e)
+        {
+            foreach (var row in this.modsTreeListView.SelectedObjects)
+            {
+                if (row is ModListItem modListItem)
+                {
+                    Presenter.RemoveMod(modListItem);
+                }
+                else if (row is ModListItem.Row modListItemRow)
+                {
+                    Presenter.RemoveMod(modListItemRow.Parent);
+                }
+            }
+        }
+
         private void ModsTreeListView_ButtonClick(object sender, BrightIdeasSoftware.CellClickEventArgs e)
         {
             var row = e.Model as ModListItem.Row;
@@ -119,7 +150,7 @@ namespace Dead_By_Daylight_Mod_Installer
             }
         }
 
-        private void modsTreeListView_CellEditStarting(object sender, BrightIdeasSoftware.CellEditEventArgs args)
+        private void ModsTreeListView_CellEditStarting(object sender, BrightIdeasSoftware.CellEditEventArgs args)
         {
             // Left align the edit control
             args.Control.Location = args.CellBounds.Location;
@@ -129,6 +160,11 @@ namespace Dead_By_Daylight_Mod_Installer
             {
                 args.Control.Size = args.CellBounds.Size;
             }
+        }
+
+        private void ModsTreeListView_SelectionChanged(object sender, EventArgs e)
+        {
+            removeModButton.Enabled = this.modsTreeListView.SelectedObject is ModListItem;
         }
     }
 }
