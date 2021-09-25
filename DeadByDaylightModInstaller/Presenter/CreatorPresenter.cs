@@ -78,7 +78,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void PickPakFile(ref ModListItem.Row row)
         {
-            if(pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak") == Enums.PickResult.Ok)
+            if (pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak") == Enums.PickResult.Ok)
             {
                 row.Data = Path.GetFileName(pakFilePath);
             }
@@ -94,11 +94,11 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void CreateModPackage()
         {
-            foreach(var modListItem in package)
+            foreach (var modListItem in package)
             {
-                foreach(var row in modListItem.Rows)
+                foreach (var row in modListItem.Rows)
                 {
-                    if(string.IsNullOrWhiteSpace(row.Data))
+                    if (string.IsNullOrWhiteSpace(row.Data))
                     {
                         var modNameRow = modListItem.Rows.First(modListItemRow => modListItemRow.Name == ModListItem.Row.TitleRowName);
                         if (string.IsNullOrWhiteSpace(modNameRow.Data))
@@ -114,7 +114,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                 }
             }
 
-            var pickResult = pickerService.PickSaveFilePath(out string filePath);
+            var pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModSavePackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
                 try

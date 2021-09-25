@@ -48,7 +48,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                 return;
             }
 
-            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModPackageFilter);
+            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
                 var modPackageFormat = packageService.GetFormat(modFilePath);
@@ -93,7 +93,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                 return;
             }
 
-            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModPackageFilter);
+            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
                 var modPackageFormat = packageService.GetFormat(modFilePath);
