@@ -78,7 +78,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void PickPakFile(ref ModListItem.Row row)
         {
-            if (pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak") == Enums.PickResult.Ok)
+            if (pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak", Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
             {
                 row.Data = Path.GetFileName(pakFilePath);
             }
