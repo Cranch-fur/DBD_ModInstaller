@@ -17,7 +17,7 @@ namespace Dead_By_Daylight_Mod_Installer.Model
             public ModListItem Parent { get; set; }
             public string DisplayName { get; set; }
             public string Name { get; set; }
-            public object Data { get; set; }
+            public string Data { get; set; }
         }
 
         public List<Row> Rows { get; set; }

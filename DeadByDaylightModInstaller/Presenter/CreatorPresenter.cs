@@ -32,38 +32,47 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             AddMod();
         }
 
+        public void RemoveMod(ModListItem modListItem)
+        {
+            package.Remove(modListItem);
+            view.ModListItems = package;
+        }
+
         public void AddMod()
         {
-            package.Add(new ModListItem
+            var modListItem = new ModListItem();
+            modListItem.Rows = new List<ModListItem.Row>
             {
-                Rows = new List<ModListItem.Row>
+                new ModListItem.Row
                 {
-                    new ModListItem.Row
-                    {
-                        DisplayName = nameof(ModPackage.Mod.Title),
-                        Name = ModListItem.Row.TitleRowName,
-                        Data = "Package",
-                    },
-                    new ModListItem.Row
-                    {
-                        DisplayName = nameof(ModPackage.Mod.PakName),
-                        Name = ModListItem.Row.PakFileNameRowName,
-                        Data = "",
-                    },
-                    new ModListItem.Row
-                    {
-                        DisplayName = "Original ubulk path",
-                        Name = ModListItem.Row.OriginalUbulkPathRowName,
-                        Data = "",
-                    },
-                    new ModListItem.Row
-                    {
-                        DisplayName = "Modified ubulk path",
-                        Name = ModListItem.Row.ModifiedUbulkPathRowName,
-                        Data = "",
-                    },
-                }
-            });
+                    DisplayName = nameof(ModPackage.Mod.Title),
+                    Name = ModListItem.Row.TitleRowName,
+                    Data = "Package",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = nameof(ModPackage.Mod.PakName),
+                    Name = ModListItem.Row.PakFileNameRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = "Original ubulk path",
+                    Name = ModListItem.Row.OriginalUbulkPathRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+                new ModListItem.Row
+                {
+                    DisplayName = "Modified ubulk path",
+                    Name = ModListItem.Row.ModifiedUbulkPathRowName,
+                    Data = "",
+                    Parent = modListItem
+                },
+            };
+            package.Add(modListItem);
             view.ModListItems = package;
         }
 
@@ -85,11 +94,11 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void CreateModPackage()
         {
-            foreach (var modListItem in package)
+            foreach(var modListItem in package)
             {
-                foreach (var row in modListItem.Rows)
+                foreach(var row in modListItem.Rows)
                 {
-                    if (string.IsNullOrWhiteSpace(row.Data))
+                    if(string.IsNullOrWhiteSpace(row.Data))
                     {
                         var modNameRow = modListItem.Rows.First(modListItemRow => modListItemRow.Name == ModListItem.Row.TitleRowName);
                         if (string.IsNullOrWhiteSpace(modNameRow.Data))

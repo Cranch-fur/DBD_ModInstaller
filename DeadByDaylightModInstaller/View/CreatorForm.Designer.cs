@@ -40,6 +40,7 @@ namespace Dead_By_Daylight_Mod_Installer
             this.dataColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.actionColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.addModButton = new System.Windows.Forms.Button();
+            this.removeModButton = new System.Windows.Forms.Button();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.modsTreeListView)).BeginInit();
             this.SuspendLayout();
@@ -87,9 +88,9 @@ namespace Dead_By_Daylight_Mod_Installer
             // 
             // generatePackageButton
             // 
-            this.generatePackageButton.Location = new System.Drawing.Point(285, 407);
+            this.generatePackageButton.Location = new System.Drawing.Point(238, 407);
             this.generatePackageButton.Name = "generatePackageButton";
-            this.generatePackageButton.Size = new System.Drawing.Size(75, 23);
+            this.generatePackageButton.Size = new System.Drawing.Size(122, 23);
             this.generatePackageButton.TabIndex = 24;
             this.generatePackageButton.Text = "Generate package";
             this.generatePackageButton.UseVisualStyleBackColor = true;
@@ -110,16 +111,20 @@ namespace Dead_By_Daylight_Mod_Installer
             this.modsTreeListView.HideSelection = false;
             this.modsTreeListView.IsSimpleDragSource = true;
             this.modsTreeListView.IsSimpleDropSink = true;
-            this.modsTreeListView.Location = new System.Drawing.Point(35, 206);
+            this.modsTreeListView.Location = new System.Drawing.Point(12, 206);
+            this.modsTreeListView.MultiSelect = false;
             this.modsTreeListView.Name = "modsTreeListView";
             this.modsTreeListView.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.Submenu;
             this.modsTreeListView.ShowGroups = false;
-            this.modsTreeListView.Size = new System.Drawing.Size(598, 195);
+            this.modsTreeListView.ShowItemToolTips = true;
+            this.modsTreeListView.Size = new System.Drawing.Size(561, 195);
             this.modsTreeListView.TabIndex = 0;
             this.modsTreeListView.UseCompatibleStateImageBehavior = false;
             this.modsTreeListView.View = System.Windows.Forms.View.Details;
             this.modsTreeListView.VirtualMode = true;
-            this.modsTreeListView.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.modsTreeListView_CellEditStarting);
+            this.modsTreeListView.ButtonClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.ModsTreeListView_ButtonClick);
+            this.modsTreeListView.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.ModsTreeListView_CellEditStarting);
+            this.modsTreeListView.SelectionChanged += new System.EventHandler(this.ModsTreeListView_SelectionChanged);
             // 
             // displayColumn
             // 
@@ -139,13 +144,23 @@ namespace Dead_By_Daylight_Mod_Installer
             // 
             // addModButton
             // 
-            this.addModButton.Location = new System.Drawing.Point(35, 399);
+            this.addModButton.Location = new System.Drawing.Point(579, 206);
             this.addModButton.Name = "addModButton";
-            this.addModButton.Size = new System.Drawing.Size(75, 23);
+            this.addModButton.Size = new System.Drawing.Size(68, 23);
             this.addModButton.TabIndex = 25;
-            this.addModButton.Text = "Add mod";
+            this.addModButton.Text = "Add";
             this.addModButton.UseVisualStyleBackColor = true;
             this.addModButton.Click += new System.EventHandler(this.AddModButton_Click);
+            // 
+            // removeModButton
+            // 
+            this.removeModButton.Location = new System.Drawing.Point(579, 235);
+            this.removeModButton.Name = "removeModButton";
+            this.removeModButton.Size = new System.Drawing.Size(68, 23);
+            this.removeModButton.TabIndex = 26;
+            this.removeModButton.Text = "Remove";
+            this.removeModButton.UseVisualStyleBackColor = true;
+            this.removeModButton.Click += new System.EventHandler(this.RemoveModButton_Click);
             // 
             // CreatorForm
             // 
@@ -155,6 +170,7 @@ namespace Dead_By_Daylight_Mod_Installer
             this.BackgroundImage = global::Dead_By_Daylight_Mod_Installer.Properties.Resources.background_creator;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(659, 434);
+            this.Controls.Add(this.removeModButton);
             this.Controls.Add(this.addModButton);
             this.Controls.Add(this.modsTreeListView);
             this.Controls.Add(this.generatePackageButton);
@@ -181,6 +197,7 @@ namespace Dead_By_Daylight_Mod_Installer
         private BrightIdeasSoftware.OLVColumn actionColumn;
         private BrightIdeasSoftware.OLVColumn dataColumn;
         private System.Windows.Forms.Button addModButton;
+        private System.Windows.Forms.Button removeModButton;
     }
 }
 
