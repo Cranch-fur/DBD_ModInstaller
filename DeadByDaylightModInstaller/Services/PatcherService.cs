@@ -11,23 +11,16 @@ namespace Dead_By_Daylight_Mod_Installer.Services
         {
             try
             {
-                BinaryPatcher.Binary patcher = new BinaryPatcher.Binary(filePath);
-                var result = await patcher.ReplaceBytes(originalBytes, changedBytes, string.Concat(Enumerable.Repeat('x', originalBytes.Length)), BinaryPatcher.ReplaceMode.FirstMatch) > 0;
-                patcher.CloseStream();
-                return result;
+                using (BinaryPatcher.Binary patcher = new BinaryPatcher.Binary(filePath))
+                {
+                    bool result = await patcher.ReplaceBytes(originalBytes, changedBytes, null, BinaryPatcher.ReplaceMode.FirstMatch) > 0;
+                    return result;
+                }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
-        }
-
-        public byte[] HexToByteArray(string hex)
-        {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
         }
     }
 }

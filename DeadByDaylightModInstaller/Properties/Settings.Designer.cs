@@ -34,5 +34,29 @@ namespace Dead_By_Daylight_Mod_Installer.Properties {
                 this["PaksPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastOriginalUbulkPath {
+            get {
+                return ((string)(this["LastOriginalUbulkPath"]));
+            }
+            set {
+                this["LastOriginalUbulkPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastModifiedUbulkPath {
+            get {
+                return ((string)(this["LastModifiedUbulkPath"]));
+            }
+            set {
+                this["LastModifiedUbulkPath"] = value;
+            }
+        }
     }
 }

@@ -4,12 +4,8 @@ using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
 using Dead_By_Daylight_Mod_Installer.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Dead_By_Daylight_Mod_Installer.Services
 {
@@ -27,8 +23,8 @@ namespace Dead_By_Daylight_Mod_Installer.Services
             }
             else if (format == ModPackageFormat.GZippedJson)
             {
-                var serializedModPackage = JsonConvert.SerializeObject(modPackage);
-                var bytes = Encoding.UTF8.GetBytes(serializedModPackage);
+                string serializedModPackage = JsonConvert.SerializeObject(modPackage);
+                byte[] bytes = Encoding.UTF8.GetBytes(serializedModPackage);
                 File.WriteAllBytes(filePath, GZipCompressor.Compress(bytes));
             }
             else
@@ -49,8 +45,8 @@ namespace Dead_By_Daylight_Mod_Installer.Services
             }
             else if (format == ModPackageFormat.GZippedJson)
             {
-                var fileBytes = File.ReadAllBytes(filePath);
-                var decompressedBytes = GZipCompressor.Decompress(fileBytes);
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+                byte[] decompressedBytes = GZipCompressor.Decompress(fileBytes);
                 return JsonConvert.DeserializeObject<ModPackage>(Encoding.UTF8.GetString(decompressedBytes));
             }
             else

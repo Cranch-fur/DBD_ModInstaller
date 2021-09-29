@@ -3,12 +3,7 @@ using Dead_By_Daylight_Mod_Installer.Model;
 using Dead_By_Daylight_Mod_Installer.Services;
 using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
 using Dead_By_Daylight_Mod_Installer.View;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Dead_By_Daylight_Mod_Installer.Presenter
@@ -35,27 +30,27 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void DisplayCreator()
         {
-            var creatorView = new CreatorForm();
+            CreatorForm creatorView = new CreatorForm();
 
-            var creatorPresenter = new CreatorPresenter(creatorView, new PackageService(), new MessageBoxService(), new PickerService());
+            CreatorPresenter creatorPresenter = new CreatorPresenter(creatorView, new PackageService(), new MessageBoxService(), new PickerService());
             creatorView.ShowDialog();
         }
 
-        public async Task InstallMod()
+        public void InstallMod()
         {
             if (!Directory.Exists(Properties.Settings.Default.PaksPath))
             {
                 return;
             }
 
-            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
+            Enums.PickResult pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
-                var modPackageFormat = packageService.GetFormat(modFilePath);
+                Enums.ModPackageFormat modPackageFormat = packageService.GetFormat(modFilePath);
                 if (modPackageFormat != Enums.ModPackageFormat.Unknown)
                 {
                     ModPackage modPackage = packageService.ReadPackage(modFilePath, modPackageFormat);
-                    foreach (var mod in modPackage.Mods)
+                    foreach (ModPackage.Mod mod in modPackage.Mods)
                     {
                         if (messageBoxService.Question($"Do you want to install \"{mod.Title}\"?"))
                         {
@@ -64,7 +59,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                             {
                                 messageBoxService.ShowMessage($"Mod Installer Can't find \"{mod.PakName}\" file, make sure that specified pak folder path still valid.");
                             }
-                            else if (await ReplaceBytes($"Installing {mod.Title}", pakFilePath, mod.OriginalBytes, mod.ModifiedBytes))
+                            else if (ReplaceBytes($"Installing {mod.Title}", pakFilePath, mod.OriginalBytes, mod.ModifiedBytes))
                             {
                                 messageBoxService.ShowMessage($"\"{mod.Title}\" Mod has been successfully installed!");
                             }
@@ -86,21 +81,21 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             }
         }
 
-        public async Task UninstallMod()
+        public void UninstallMod()
         {
             if (!Directory.Exists(Properties.Settings.Default.PaksPath))
             {
                 return;
             }
 
-            var pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
+            Enums.PickResult pickResult = pickerService.PickFilePath(out string modFilePath, Constants.ModOpenPackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
-                var modPackageFormat = packageService.GetFormat(modFilePath);
+                Enums.ModPackageFormat modPackageFormat = packageService.GetFormat(modFilePath);
                 if (modPackageFormat != Enums.ModPackageFormat.Unknown)
                 {
                     ModPackage modPackage = packageService.ReadPackage(modFilePath, modPackageFormat);
-                    foreach (var mod in modPackage.Mods)
+                    foreach (ModPackage.Mod mod in modPackage.Mods)
                     {
                         if (messageBoxService.Question($"Do you want to uninstall \"{mod.Title}\"?"))
                         {
@@ -109,7 +104,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                             {
                                 messageBoxService.ShowMessage($"Mod Installer Can't find \"{mod.PakName}\" file, make sure that specified pak folder path still valid.");
                             }
-                            else if (await ReplaceBytes($"Uninstalling {mod.Title}", pakFilePath, mod.ModifiedBytes, mod.OriginalBytes))
+                            else if (ReplaceBytes($"Uninstalling {mod.Title}", pakFilePath, mod.ModifiedBytes, mod.OriginalBytes))
                             {
                                 messageBoxService.ShowMessage($"\"{mod.Title}\" Mod successfully uninstalled!");
                             }
@@ -133,7 +128,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void ChangePaksPath()
         {
-            var pickResult = pickerService.PickFolder(out string newPath);
+            Enums.PickResult pickResult = pickerService.PickFolder(out string newPath);
             if (pickResult == Enums.PickResult.Ok)
             {
                 Properties.Settings.Default.PaksPath = newPath;
@@ -147,16 +142,21 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
             }
         }
 
-        private async Task<bool> ReplaceBytes(string message, string filePath, byte[] originalBytes, byte[] changedBytes)
+        private bool ReplaceBytes(string message, string filePath, byte[] originalBytes, byte[] changedBytes)
         {
             bool result = false;
-            var spinnerView = new SpinnerProgressForm();
-            var spinnerPresenter = new SpinnerProgressPresenter(spinnerView);
-            spinnerPresenter.SetMessage(message);
-            spinnerPresenter.SetWork(Task.Run(async () => result = await patcherService.FindAndReplaceBytes(filePath, originalBytes, changedBytes)));
-            spinnerView.ShowDialog();
-
+            Task<bool> workTask = Task.Run(async () => result = await patcherService.FindAndReplaceBytes(filePath, originalBytes, changedBytes));
+            ShowProgressDialog(message, workTask);
             return result;
+        }
+
+        private void ShowProgressDialog(string message, Task workTask)
+        {
+            SpinnerProgressForm spinnerView = new SpinnerProgressForm();
+            SpinnerProgressPresenter spinnerPresenter = new SpinnerProgressPresenter(spinnerView);
+            spinnerPresenter.SetMessage(message);
+            spinnerPresenter.SetWork(workTask);
+            spinnerView.ShowDialog();
         }
     }
 }

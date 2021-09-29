@@ -32,6 +32,8 @@ namespace Dead_By_Daylight_Mod_Installer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpinnerProgressForm));
             this.circularProgressBar1 = new CircularProgressBar.CircularProgressBar();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.messageLabel = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // circularProgressBar1
@@ -69,11 +71,23 @@ namespace Dead_By_Daylight_Mod_Installer
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.flowLayoutPanel1.Controls.Add(this.messageLabel);
             this.flowLayoutPanel1.ForeColor = System.Drawing.Color.White;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(78, 61);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(245, 60);
             this.flowLayoutPanel1.TabIndex = 2;
+            // 
+            // messageLabel
+            // 
+            this.messageLabel.AutoSize = true;
+            this.messageLabel.Name = "messageLabel";
+            this.messageLabel.BackColor = System.Drawing.Color.Transparent;
+            this.messageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.messageLabel.ForeColor = System.Drawing.Color.White;
+            this.messageLabel.Size = new System.Drawing.Size(86, 31);
+            this.messageLabel.TabIndex = 1;
+            this.messageLabel.Text = "label1";
             // 
             // SpinnerProgressForm
             // 
@@ -91,6 +105,8 @@ namespace Dead_By_Daylight_Mod_Installer
             this.Name = "SpinnerProgressForm";
             this.Text = "Dead By Daylight Mod Installer";
             this.Load += new System.EventHandler(this.SpinnerProgressForm_Load);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -99,6 +115,7 @@ namespace Dead_By_Daylight_Mod_Installer
 
         private CircularProgressBar.CircularProgressBar circularProgressBar1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label messageLabel;
     }
 }
 

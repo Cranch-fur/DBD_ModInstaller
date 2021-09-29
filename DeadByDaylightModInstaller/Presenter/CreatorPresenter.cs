@@ -2,13 +2,10 @@
 using Dead_By_Daylight_Mod_Installer.Model;
 using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
 using Dead_By_Daylight_Mod_Installer.View;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dead_By_Daylight_Mod_Installer.Presenter
 {
@@ -17,7 +14,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
         private readonly ICreatorView view;
         private readonly IMessageBoxService messageBoxService;
         private readonly IPickerService pickerService;
-        private List<ModListItem> package;
+        private readonly List<ModListItem> package;
         private readonly IPackageService packageService;
 
         public CreatorPresenter(ICreatorView view, IPackageService packageService, IMessageBoxService messageBoxService, IPickerService pickerService)
@@ -40,14 +37,14 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void AddMod()
         {
-            var modListItem = new ModListItem();
+            ModListItem modListItem = new ModListItem();
             modListItem.Rows = new List<ModListItem.Row>
             {
                 new ModListItem.Row
                 {
                     DisplayName = nameof(ModPackage.Mod.Title),
                     Name = ModListItem.Row.TitleRowName,
-                    Data = "Package",
+                    Data = "Mod",
                     Parent = modListItem
                 },
                 new ModListItem.Row
@@ -78,29 +75,44 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
 
         public void PickPakFile(ref ModListItem.Row row)
         {
-            if (pickerService.PickFilePath(out string pakFilePath, "Pak file|*.pak", Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
+            if (pickerService.PickFilePath(out string pakFilePath, Constants.PickPakFilter, Properties.Settings.Default.PaksPath) == Enums.PickResult.Ok)
             {
                 row.Data = Path.GetFileName(pakFilePath);
             }
         }
 
-        public void PickUbulkFile(ref ModListItem.Row row)
+        public void PickOriginalUbulkFile(ref ModListItem.Row row)
         {
-            if (pickerService.PickFilePath(out string originalFilePath, "ubulk (*.ubulk)|*.ubulk|All files (*.*)|*.*") == Enums.PickResult.Ok)
+            if (pickerService.PickFilePath(out string originalUbulkFilePath, Constants.PickUbulkFilter, Properties.Settings.Default.LastOriginalUbulkPath) == Enums.PickResult.Ok)
             {
-                row.Data = originalFilePath;
+                row.Data = originalUbulkFilePath;
+
+                Properties.Settings.Default.LastOriginalUbulkPath = Path.GetDirectoryName(originalUbulkFilePath);
+                Properties.Settings.Default.Save();
+            }
+        }
+
+
+        public void PickModifiedUbulkFile(ref ModListItem.Row row)
+        {
+            if (pickerService.PickFilePath(out string modifiedUbulkFilePath, Constants.PickUbulkFilter, Properties.Settings.Default.LastModifiedUbulkPath) == Enums.PickResult.Ok)
+            {
+                row.Data = modifiedUbulkFilePath;
+
+                Properties.Settings.Default.LastModifiedUbulkPath = Path.GetDirectoryName(modifiedUbulkFilePath);
+                Properties.Settings.Default.Save();
             }
         }
 
         public void CreateModPackage()
         {
-            foreach (var modListItem in package)
+            foreach (ModListItem modListItem in package)
             {
-                foreach (var row in modListItem.Rows)
+                foreach (ModListItem.Row row in modListItem.Rows)
                 {
                     if (string.IsNullOrWhiteSpace(row.Data))
                     {
-                        var modNameRow = modListItem.Rows.First(modListItemRow => modListItemRow.Name == ModListItem.Row.TitleRowName);
+                        ModListItem.Row modNameRow = modListItem.Rows.First(modListItemRow => modListItemRow.Name == ModListItem.Row.TitleRowName);
                         if (string.IsNullOrWhiteSpace(modNameRow.Data))
                         {
                             messageBoxService.ShowMessage("Mod title missing");
@@ -114,7 +126,7 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                 }
             }
 
-            var pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModSavePackageFilter);
+            Enums.PickResult pickResult = pickerService.PickSaveFilePath(out string filePath, Constants.ModSavePackageFilter);
             if (pickResult == Enums.PickResult.Ok)
             {
                 try
@@ -129,7 +141,8 @@ namespace Dead_By_Daylight_Mod_Installer.Presenter
                             ModifiedBytes = File.ReadAllBytes(modListItem.Rows.First(row => row.Name == ModListItem.Row.ModifiedUbulkPathRowName).Data),
                         }).ToList()
                     };
-                    File.WriteAllText(filePath, JsonConvert.SerializeObject(modPackage));
+
+                    packageService.SavePackage(filePath, modPackage, packageService.GetFormat(filePath));
                 }
                 catch (Exception ex)
                 {

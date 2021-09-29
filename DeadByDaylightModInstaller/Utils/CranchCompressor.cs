@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Dead_By_Daylight_Mod_Installer.Utils
 {
@@ -26,16 +23,16 @@ namespace Dead_By_Daylight_Mod_Installer.Utils
 
         public static byte[] Decompress(byte[] input)
         {
-            using (var source = new MemoryStream(input))
+            using (MemoryStream source = new MemoryStream(input))
             {
                 byte[] lengthBytes = new byte[4];
                 source.Read(lengthBytes, 0, 4);
 
-                var length = BitConverter.ToInt32(lengthBytes, 0);
-                using (var decompressionStream = new GZipStream(source,
+                int length = BitConverter.ToInt32(lengthBytes, 0);
+                using (GZipStream decompressionStream = new GZipStream(source,
                     CompressionMode.Decompress))
                 {
-                    var result = new byte[length];
+                    byte[] result = new byte[length];
                     decompressionStream.Read(result, 0, length);
                     return result;
                 }
@@ -44,12 +41,12 @@ namespace Dead_By_Daylight_Mod_Installer.Utils
 
         public static byte[] Compress(byte[] input)
         {
-            using (var result = new MemoryStream())
+            using (MemoryStream result = new MemoryStream())
             {
-                var lengthBytes = BitConverter.GetBytes(input.Length);
+                byte[] lengthBytes = BitConverter.GetBytes(input.Length);
                 result.Write(lengthBytes, 0, 4);
 
-                using (var compressionStream = new GZipStream(result,
+                using (GZipStream compressionStream = new GZipStream(result,
                     CompressionMode.Compress))
                 {
                     compressionStream.Write(input, 0, input.Length);

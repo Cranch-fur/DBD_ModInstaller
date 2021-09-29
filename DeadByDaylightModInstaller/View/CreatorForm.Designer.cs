@@ -154,6 +154,7 @@ namespace Dead_By_Daylight_Mod_Installer
             // 
             // removeModButton
             // 
+            this.removeModButton.Enabled = false;
             this.removeModButton.Location = new System.Drawing.Point(579, 235);
             this.removeModButton.Name = "removeModButton";
             this.removeModButton.Size = new System.Drawing.Size(68, 23);

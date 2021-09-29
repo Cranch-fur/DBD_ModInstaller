@@ -1,10 +1,6 @@
 ﻿using Dead_By_Daylight_Mod_Installer.Enums;
 using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dead_By_Daylight_Mod_Installer.Services
@@ -30,7 +26,7 @@ namespace Dead_By_Daylight_Mod_Installer.Services
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             { }
 
             return PickResult.None;

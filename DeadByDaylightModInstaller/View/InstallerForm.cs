@@ -1,13 +1,6 @@
 ﻿using Dead_By_Daylight_Mod_Installer.Presenter;
 using Dead_By_Daylight_Mod_Installer.View;
-using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dead_By_Daylight_Mod_Installer
@@ -26,8 +19,8 @@ namespace Dead_By_Daylight_Mod_Installer
 
         public string PaksPath
         {
-            get => this.paksPathTextBox.Text;
-            set => this.paksPathTextBox.Text = value;
+            get => paksPathTextBox.Text;
+            set => paksPathTextBox.Text = value;
         }
 
         protected override void WndProc(ref Message m)
@@ -68,14 +61,14 @@ namespace Dead_By_Daylight_Mod_Installer
             WndProc(ref mouse);
         }
 
-        private async void InstallButton_Click(object sender, EventArgs e)
+        private void InstallButton_Click(object sender, EventArgs e)
         {
-            await Presenter.InstallMod();
+            Presenter.InstallMod();
         }
 
-        private async void UninstallButton_Click(object sender, EventArgs e)
+        private void UninstallButton_Click(object sender, EventArgs e)
         {
-            await Presenter.UninstallMod();
+            Presenter.UninstallMod();
         }
 
         private void ChangePaksPathButton_Click(object sender, EventArgs e)
@@ -91,7 +84,7 @@ namespace Dead_By_Daylight_Mod_Installer
         private void DiscordInviteLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Specify that the link was visited.
-            this.discordInviteLinkLabel.LinkVisited = true;
+            discordInviteLinkLabel.LinkVisited = true;
 
             // Navigate to a URL.
             System.Diagnostics.Process.Start("https://discord.gg/sNDK9qzCcn");
@@ -100,7 +93,7 @@ namespace Dead_By_Daylight_Mod_Installer
         private void TwitchLinkLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Specify that the link was visited.
-            this.twitchLinkLinkLabel.LinkVisited = true;
+            twitchLinkLinkLabel.LinkVisited = true;
 
             // Navigate to a URL.
             System.Diagnostics.Process.Start("https://www.twitch.tv/thegrundo");

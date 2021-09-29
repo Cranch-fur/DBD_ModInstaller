@@ -13,9 +13,10 @@ namespace BinaryPatcher
         AllMatches
     }
 
-    public class Binary
+    public class Binary : IDisposable
     {
-        private readonly Stream _binaryStream;
+        private Stream _binaryStream;
+        private bool disposedValue;
         private const int BUFFER_SIZE = 0x8aa0000;//4096;
 
         public Binary(byte[] bytes)
@@ -33,11 +34,6 @@ namespace BinaryPatcher
         public Binary(string file)
         {
             _binaryStream = File.Open(file, FileMode.Open, FileAccess.ReadWrite);
-        }
-
-        public void CloseStream()
-        {
-            _binaryStream.Close();
         }
 
         /// <summary>
@@ -213,6 +209,27 @@ namespace BinaryPatcher
                 stream.Position -= bytesMatched; // find match even if split across two blocks
             }
             return false; // -1;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _binaryStream?.Dispose();
+                }
+
+                _binaryStream = null;
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

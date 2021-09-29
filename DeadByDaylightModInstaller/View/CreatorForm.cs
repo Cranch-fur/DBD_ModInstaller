@@ -1,16 +1,10 @@
-﻿using BrightIdeasSoftware;
-using Dead_By_Daylight_Mod_Installer.Model;
+﻿using Dead_By_Daylight_Mod_Installer.Model;
 using Dead_By_Daylight_Mod_Installer.Presenter;
 using Dead_By_Daylight_Mod_Installer.View;
-using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dead_By_Daylight_Mod_Installer
@@ -19,20 +13,20 @@ namespace Dead_By_Daylight_Mod_Installer
     {
         public List<ModListItem> ModListItems
         {
-            get => this.modsTreeListView.Roots as List<ModListItem>;
-            set => this.modsTreeListView.Roots = value;
+            get => modsTreeListView.Roots as List<ModListItem>;
+            set => modsTreeListView.Roots = value;
         }
 
         public CreatorForm()
         {
             InitializeComponent();
 
-            this.actionColumn.AspectGetter = ActionColumnAspectGetter;
-            this.displayColumn.AspectGetter = DisplayColumnAspectGetter;
-            this.dataColumn.AspectGetter = DataColumnAspectGetter;
-            this.dataColumn.AspectPutter = DataColumnAspectPutter;
-            this.modsTreeListView.CanExpandGetter = ModsTreeListViewCanExpandGetter;
-            this.modsTreeListView.ChildrenGetter = ModsTreeListViewChildrenGetter;
+            actionColumn.AspectGetter = ActionColumnAspectGetter;
+            displayColumn.AspectGetter = DisplayColumnAspectGetter;
+            dataColumn.AspectGetter = DataColumnAspectGetter;
+            dataColumn.AspectPutter = DataColumnAspectPutter;
+            modsTreeListView.CanExpandGetter = ModsTreeListViewCanExpandGetter;
+            modsTreeListView.ChildrenGetter = ModsTreeListViewChildrenGetter;
         }
 
         public CreatorPresenter Presenter { private get; set; }
@@ -120,7 +114,7 @@ namespace Dead_By_Daylight_Mod_Installer
 
         private void RemoveModButton_Click(object sender, EventArgs e)
         {
-            foreach (var row in this.modsTreeListView.SelectedObjects)
+            foreach (object row in modsTreeListView.SelectedObjects)
             {
                 if (row is ModListItem modListItem)
                 {
@@ -135,18 +129,22 @@ namespace Dead_By_Daylight_Mod_Installer
 
         private void ModsTreeListView_ButtonClick(object sender, BrightIdeasSoftware.CellClickEventArgs e)
         {
-            var row = e.Model as ModListItem.Row;
+            ModListItem.Row row = e.Model as ModListItem.Row;
             if (row.Name == ModListItem.Row.TitleRowName)
             {
-                this.modsTreeListView.StartCellEdit(e.Item, 1);
+                modsTreeListView.StartCellEdit(e.Item, 1);
             }
             else if (row.Name == ModListItem.Row.PakFileNameRowName)
             {
                 Presenter.PickPakFile(ref row);
             }
-            else if (row.Name == ModListItem.Row.OriginalUbulkPathRowName || row.Name == ModListItem.Row.ModifiedUbulkPathRowName)
+            else if (row.Name == ModListItem.Row.OriginalUbulkPathRowName)
             {
-                Presenter.PickUbulkFile(ref row);
+                Presenter.PickOriginalUbulkFile(ref row);
+            }
+            else if (row.Name == ModListItem.Row.ModifiedUbulkPathRowName)
+            {
+                Presenter.PickModifiedUbulkFile(ref row);
             }
         }
 
@@ -164,7 +162,7 @@ namespace Dead_By_Daylight_Mod_Installer
 
         private void ModsTreeListView_SelectionChanged(object sender, EventArgs e)
         {
-            removeModButton.Enabled = this.modsTreeListView.SelectedObject is ModListItem;
+            removeModButton.Enabled = modsTreeListView.SelectedObject is ModListItem;
         }
     }
 }

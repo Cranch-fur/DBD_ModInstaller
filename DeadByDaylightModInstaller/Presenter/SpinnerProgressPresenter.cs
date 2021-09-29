@@ -1,12 +1,4 @@
-﻿using Dead_By_Daylight_Mod_Installer.Model;
-using Dead_By_Daylight_Mod_Installer.Services.Interfaces;
-using Dead_By_Daylight_Mod_Installer.View;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using Dead_By_Daylight_Mod_Installer.View;
 using System.Threading.Tasks;
 
 namespace Dead_By_Daylight_Mod_Installer.Presenter
